@@ -25,7 +25,8 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci
+      # `npm install`, not `npm ci`: see the note in ci.yml.
+      - run: npm install --no-audit --no-fund
 
       # Fails, and so publishes nothing, if too many ETFs could not be fetched.
       - name: Build the snapshot
