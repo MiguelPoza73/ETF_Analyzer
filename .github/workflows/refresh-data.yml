@@ -1,0 +1,44 @@
+name: Refresh market data
+
+# Rebuilds the opportunities ranking and publishes it on the `data` branch,
+# where the deployed app reads it. Nothing is committed to `main`.
+
+on:
+  schedule:
+    # Weekdays at 22:30 UTC, after the US market close.
+    - cron: "30 22 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: true
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      # Fails, and so publishes nothing, if too many ETFs could not be fetched.
+      - name: Build the snapshot
+        run: npm run snapshot
+
+      - name: Publish on the data branch
+        working-directory: snapshot-out
+        env:
+          REMOTE: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        run: |
+          git init --quiet --initial-branch=data
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit --quiet --message "Market data snapshot $(date -u +%F)"
+          git push --force "$REMOTE" data

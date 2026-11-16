@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. The app is dark-only.
+ * Chart colours follow a validated data-visualisation palette: one accent hue
+ * for the data, a grey for context, and status colours that always come with
+ * an icon and a label. Keep src/lib/theme.ts in sync.
+ */
+@theme {
+  /* Surfaces */
+  --color-bg: #0b0e14;
+  --color-surface: #12161f;
+  --color-raised: #181d28;
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-strong: rgba(255, 255, 255, 0.16);
+  --color-grid: #222834;
+  --color-axis: #323a4a;
+
+  /* Text */
+  --color-ink: #eef1f6;
+  --color-ink-2: #b6bdcb;
+  --color-ink-3: #8791a4;
+
+  /* Data */
+  --color-accent: #3987e5;
+  --color-accent-soft: rgba(57, 135, 229, 0.14);
+  --color-deemph: #6f7889;
+
+  /* Status: reserved for good / caution / bad */
+  --color-good: #0ca30c;
+  --color-warning: #fab219;
+  --color-critical: #d03b3b;
+
+  /* Signed figures (text) */
+  --color-up: #0ca30c;
+  --color-down: #e66767;
+
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* Base styles live in the base layer so utility classes can override them. */
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-bg);
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* Range input (simulator horizon) */
+  input[type="range"] {
+    accent-color: var(--color-accent);
+  }
+}
+
+/* Soft glow behind the top of every page. */
+.page-glow {
+  background:
+    radial-gradient(60rem 28rem at 50% -8rem, rgba(57, 135, 229, 0.16), transparent 70%),
+    var(--color-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
