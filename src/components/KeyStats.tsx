@@ -4,7 +4,7 @@ import { Card, signClass, StatTile } from "./Card";
 
 /** Reference figures about the asset's history. */
 export async function KeyStats({ analysis, currency }: { analysis: Analysis; currency: string }) {
-  const { t, percent, price, number, date, years } = await getI18n();
+  const { t, percent, price, number, date, span } = await getI18n();
   const signed = (value: number) => percent(value, { signed: true });
   const optionalReturn = (value: number | null) =>
     value === null ? (
@@ -32,7 +32,7 @@ export async function KeyStats({ analysis, currency }: { analysis: Analysis; cur
         />
         <StatTile
           label={t("stats.history")}
-          value={years(analysis.history.years)}
+          value={span(analysis.history.years)}
           note={t("stats.since", { date: date(analysis.history.firstDate) })}
         />
       </div>

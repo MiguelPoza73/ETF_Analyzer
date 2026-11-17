@@ -1,5 +1,5 @@
 import type { I18n } from "@/i18n/core";
-import { ANALYSIS_CONFIG as C } from "@/lib/analysis/config";
+import { ANALYSIS_CONFIG as C, requiredHistoryYears as minYears } from "@/lib/analysis/config";
 
 interface Section {
   title: string;
@@ -22,8 +22,6 @@ export function methodologyContent({ locale, percent, number }: I18n): Methodolo
   const pct = (value: number) => percent(value, { digits: 0 });
   const w = C.weights;
   const cap = C.expectedCapAnnual;
-  const minYears = (horizon: number) =>
-    Math.max(horizon + C.minExtraYears, horizon * C.minHistoryMultiple);
   const paths = number(C.projection.paths);
 
   if (locale === "en") {

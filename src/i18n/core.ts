@@ -108,7 +108,20 @@ export function createI18n(locale: Locale) {
     return t(rounded === 1 ? "units.year" : "units.years", { count: rounded });
   };
 
-  return { locale, t, percent, number, compact, price, money, date, years };
+  /**
+   * A measured length of time: "2,7 años", "15 años". Below 10 years it keeps
+   * one decimal and never rounds up to a whole year, so 2.96 years of history
+   * reads "2,9 años", not the "3 años" a verdict needs.
+   */
+  const span = (count: number) => {
+    if (count >= 10) return years(count);
+    let value = Math.round(count * 10) / 10;
+    if (Number.isInteger(value) && value > count) value = Math.floor(count * 10) / 10;
+    const text = number(value, Number.isInteger(value) ? 0 : 1);
+    return t(value === 1 ? "units.year" : "units.years", { count: text });
+  };
+
+  return { locale, t, percent, number, compact, price, money, date, years, span };
 }
 
 export type I18n = ReturnType<typeof createI18n>;

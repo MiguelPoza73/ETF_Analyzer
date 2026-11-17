@@ -121,3 +121,11 @@ export const ANALYSIS_CONFIG = {
     minMonths: 24,
   },
 } as const;
+
+/** Years of price history needed to analyse a horizon of `horizon` years. */
+export function requiredHistoryYears(horizon: number): number {
+  return Math.max(
+    horizon + ANALYSIS_CONFIG.minExtraYears,
+    horizon * ANALYSIS_CONFIG.minHistoryMultiple,
+  );
+}

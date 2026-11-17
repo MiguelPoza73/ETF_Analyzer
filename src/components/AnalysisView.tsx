@@ -5,7 +5,7 @@ import { HORIZONS, type HorizonYears } from "@/lib/analysis/config";
 import type { Analysis } from "@/lib/analysis/types";
 import { EvidenceBlock } from "./EvidenceBlock";
 import { FactorBars } from "./FactorBars";
-import { VerdictCard } from "./VerdictCard";
+import { NoVerdictCard, VerdictCard } from "./VerdictCard";
 
 interface AnalysisViewProps {
   analysis: Analysis;
@@ -22,6 +22,16 @@ export function AnalysisView({ analysis, chart }: AnalysisViewProps) {
   const [selected, setSelected] = useState<HorizonYears>(firstAvailable);
   const horizon = analysis.horizons[selected];
 
+  // No horizon can be analysed: a short notice above a full-width chart.
+  if (!horizon) {
+    return (
+      <div className="grid gap-4">
+        <NoVerdictCard analysis={analysis} />
+        <div className="min-w-0">{chart}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-4 lg:grid-cols-5">
       <div className="lg:col-span-2">
@@ -33,16 +43,12 @@ export function AnalysisView({ analysis, chart }: AnalysisViewProps) {
         />
       </div>
       <div className="min-w-0 lg:col-span-3">{chart}</div>
-      {horizon && (
-        <>
-          <div className="min-w-0 lg:col-span-3">
-            <EvidenceBlock horizon={horizon} />
-          </div>
-          <div className="lg:col-span-2">
-            <FactorBars factors={horizon.factors} />
-          </div>
-        </>
-      )}
+      <div className="min-w-0 lg:col-span-3">
+        <EvidenceBlock horizon={horizon} />
+      </div>
+      <div className="lg:col-span-2">
+        <FactorBars factors={horizon.factors} />
+      </div>
     </div>
   );
 }

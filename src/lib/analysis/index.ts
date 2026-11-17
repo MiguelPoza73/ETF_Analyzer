@@ -1,6 +1,7 @@
 import {
   ANALYSIS_CONFIG,
   HORIZONS,
+  requiredHistoryYears,
   TRADING_DAYS_PER_MONTH,
   type HorizonYears,
 } from "./config";
@@ -99,15 +100,14 @@ export function analyze(series: PriceSeries, seedKey: string): Analysis | null {
       ? annualReturnSince(series, lastDay - years * DAYS_PER_YEAR).value
       : null;
 
-  const { weights, labels, minExtraYears, minHistoryMultiple } = ANALYSIS_CONFIG;
+  const { weights, labels } = ANALYSIS_CONFIG;
   const discountScore = scoreDiscount(fromHigh, percentile);
   const trendScore = scoreTrend(trend);
   const momentumScore = scoreMomentum(rsiValue);
   const longRunScore = scoreLongRun(longRun.value);
 
   const analyzeHorizon = (years: HorizonYears): HorizonAnalysis | null => {
-    const requiredYears = Math.max(years + minExtraYears, years * minHistoryMultiple);
-    if (historyYears < requiredYears) return null;
+    if (historyYears < requiredHistoryYears(years)) return null;
     const evidence = buildEvidence(series, drawdowns, years);
     if (!evidence) return null;
 

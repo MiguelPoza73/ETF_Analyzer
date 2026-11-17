@@ -2,6 +2,8 @@
 
 **Is now a good time to buy?** Search for an ETF, stock or fund and get a clear, data-driven answer based on its price history: a 0–100 score, a verdict, the expected return and an investment simulator.
 
+**Live demo: [etf-analyzer-swart.vercel.app](https://etf-analyzer-swart.vercel.app/en)**
+
 🇪🇸 [Leer en español](README.es.md)
 
 ![Asset page: verdict, expected return and price chart](docs/asset.png)
